@@ -34,3 +34,4 @@ Een minimale parkeerapp waarmee gebruikers kunnen inloggen, hun locatie zien, ee
 
 ## Contact
 Project door Joost Kamstra – 2025
+<!-- trigger deploy -->
