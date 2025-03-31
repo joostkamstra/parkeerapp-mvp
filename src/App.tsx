@@ -1,43 +1,26 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { supabase } from './supabase'
 
 function App() {
-  const [isParking, setIsParking] = useState(false)
-  const [startTime, setStartTime] = useState<Date | null>(null)
-
-  const startSession = () => {
-    const now = new Date()
-    setStartTime(now)
-    setIsParking(true)
-    localStorage.setItem('parking_session', JSON.stringify({ startTime: now }))
-  }
-
-  const stopSession = () => {
-    const session = localStorage.getItem('parking_session')
-    if (session) {
-      const data = JSON.parse(session)
-      const endTime = new Date()
-      console.log('Sessie info:', {
-        start: data.startTime,
-        end: endTime.toISOString(),
+  useEffect(() => {
+    // Simuleer een sessie aanmaken zonder user_id
+    const createSession = async () => {
+      const { error } = await supabase.from('sessions').insert({
+        start_time: new Date().toISOString(),
+        location: 'Testlocatie via frontend',
+        paid: false,
       })
-      // hier later: versturen naar Supabase
-      localStorage.removeItem('parking_session')
+      if (error) console.error('Fout bij invoegen sessie:', error)
+      else console.log('✅ Sessie aangemaakt zonder login')
     }
-    setIsParking(false)
-    setStartTime(null)
-  }
+
+    createSession()
+  }, [])
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>Parkeerapp MVP</h1>
-      {isParking ? (
-        <>
-          <p>Sessie gestart om: {startTime?.toLocaleTimeString()}</p>
-          <button onClick={stopSession}>Stop sessie</button>
-        </>
-      ) : (
-        <button onClick={startSession}>Start parkeersessie</button>
-      )}
+    <div className="p-4">
+      <h1 className="text-xl font-bold">Parkeerapp MVP</h1>
+      <p>Sessie wordt automatisch gestart (zonder login)...</p>
     </div>
   )
 }
